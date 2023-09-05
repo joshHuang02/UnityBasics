@@ -6,6 +6,7 @@ TagManager:
   tags:
   - rotating
   - cake
+  - burger
   layers:
   - Default
   - TransparentFX

@@ -40,28 +40,28 @@ public class FoodController : MonoBehaviour {
     void Update() {
         if (Input.GetKey(KeyCode.J)) {
             transform.Rotate(100 * Time.deltaTime * speed * (1+partNum*0.1f) * Vector3.left);
-            transform.localScale += new Vector3(speed, speed, speed) * 0.0001f;
+            transform.localScale += new Vector3(speed, speed, speed) * 0.001f;
         }
         if (Input.GetKey(KeyCode.K)) {
             transform.Rotate(-100 * Time.deltaTime * speed * (1+partNum*0.1f) * Vector3.left);
-            transform.localScale -= new Vector3(speed, speed, speed) * 0.0001f;
+            transform.localScale -= new Vector3(speed, speed, speed) * 0.001f;
 
         }
         if (Input.GetKey(KeyCode.W))
         {
-            transform.position += 0.0005f * (partNum*partNum) * Vector3.up;
+            transform.position += 0.003f * (partNum*partNum) * Vector3.up;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            transform.position += 0.0005f * (partNum*partNum) * Vector3.down;
+            transform.position += 0.003f * (partNum*partNum) * Vector3.down;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            transform.position += 0.0005f * (partNum*partNum) * Vector3.left;
+            transform.position += 0.003f * (partNum*partNum) * Vector3.left;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            transform.position += 0.0005f * (partNum*partNum) * Vector3.right;
+            transform.position += 0.003f * (partNum*partNum) * Vector3.right;
         }
         if (Input.GetKey(KeyCode.Q)) {
             transform.RotateAround(Vector3.zero, Vector3.forward, 20 * speed * Time.deltaTime);

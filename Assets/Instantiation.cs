@@ -36,9 +36,12 @@ public class Instantiation : MonoBehaviour
 
         //instantiate a cube prefab inside the empty object
         c1 = Instantiate(cubePrefab, empty.transform);
-        c2 = Instantiate(cubePrefab, empty.transform);
-        //by default they are in position 0,0 and scale 1
+        
+        //another way to do the same
+        c2 = Instantiate(cubePrefab);
+        c2.transform.SetParent(empty.transform);
 
+        //by default they are in position 0,0 and scale 1
         c1.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         c2.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 

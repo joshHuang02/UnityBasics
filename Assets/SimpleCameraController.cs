@@ -152,11 +152,11 @@ namespace UnityTemplateProjects
             {
                 direction += Vector3.right;
             }
-            if (Input.GetKey(KeyCode.Q))
+            if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.LeftControl))
             {
                 direction += Vector3.down;
             }
-            if (Input.GetKey(KeyCode.E))
+            if (Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space))
             {
                 direction += Vector3.up;
             }

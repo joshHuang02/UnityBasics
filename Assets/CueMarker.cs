@@ -16,6 +16,4 @@ public class CueMarker : Marker, IMarker, INotification, INotificationOptionProv
     
     public NotificationFlags flags => (retroactive ? NotificationFlags.Retroactive : default) | (emitOnce ? NotificationFlags.TriggerOnce : default);
 
-
-
 }

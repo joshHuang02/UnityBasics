@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(AudioSource))]
 public class AudioControls : MonoBehaviour
@@ -9,28 +10,36 @@ public class AudioControls : MonoBehaviour
     public GameObject sphere2;
     public GameObject sphere3;
 
-    float[] spectrum = new float[512];
-    public static float[] freqBand = new float[8];
+    private float[] spectrum;
+    private float[] rawSpectrum;
+    private static float[] freqBand;
+    private int bandCount;
 
     public GameObject[] bandObjects;
     public float heightMultiplier = 1;
 
     public float smoothing = 100;
     public float threshold = 10;
+
+    private bool bass;
     
     // Start is called before the first frame update
-    void Start()
-    {
-
+    void Start() {
+        bandCount = bandObjects.Length;
+        rawSpectrum =  new float[(int)Mathf.Pow(2, bandCount + 1)];
+        freqBand = new float[bandCount];
     }
 
     // Update is called once per frame
     void Update()
     {
         //get the spectrum
-        AudioListener.GetSpectrumData(spectrum, 0, FFTWindow.Blackman);
+        AudioListener.GetSpectrumData(rawSpectrum, 0, FFTWindow.Blackman);
 
-        //splits it in 8 bands
+        spectrum = rawSpectrum[1000..6000];
+        // Debug.Log(spectrum[0]);
+
+        //splits it in bands
         MakeFrequencyBands();
 
         //use each band level to control a corresponding cube for testing
@@ -44,71 +53,85 @@ public class AudioControls : MonoBehaviour
                 {
                     float height = freqBand[i] * heightMultiplier;
                     bandObjects[i].transform.localScale = new Vector3(1, 1, height);
+                    
+                    if (i == 3 && height > 4) {
+                        if (!bass) { StartCoroutine(changeBandColor(i, Color.blue));}
+                    }
+
+                    if (i == 5 && height > 1.1) {
+                        StartCoroutine(changeBandColor(i, Color.red));
+                    }
+
                 }
             }
         }
 
-        //or use the band independently to control something else (red sphere)
-        float s = freqBand[0]/2f;
-
-        //same scale on 3 dimensions
-        sphere1.transform.localScale = new Vector3(s, s, s);
-
-
-
-        //to make it less noisy I can use an easing function (blue sphere)
-        float currentScale = sphere2.transform.localScale.x; //it's the same across the 3 dimension so axis doesn't matter
-        float targetScale = freqBand[0] / 2f;
-
-        //add to the current scale a fraction of the distance to the target scale
-        //zeno paradox: Achilles and the tortoise. Move halfway to your destination every time
-        float smoothedScale = currentScale + (targetScale - currentScale) / smoothing;
-
-        sphere2.transform.localScale = new Vector3(smoothedScale, smoothedScale, smoothedScale);
-
-
-        //do something only when you reach a certain threshold (green sphere)
-        if(freqBand[0] > threshold)
-        {
-            sphere3.transform.localScale = new Vector3(10, 10, 10);
-        }
-        else
-        {
-            sphere3.transform.localScale = new Vector3(1, 1, 1);
-        }
+        // //or use the band independently to control something else (red sphere)
+        // float s = freqBand[0]/2f;
+        //
+        // //same scale on 3 dimensions
+        // sphere1.transform.localScale = new Vector3(s, s, s);
+        //
+        //
+        //
+        // //to make it less noisy I can use an easing function (blue sphere)
+        // float currentScale = sphere2.transform.localScale.x; //it's the same across the 3 dimension so axis doesn't matter
+        // float targetScale = freqBand[0] / 2f;
+        //
+        // //add to the current scale a fraction of the distance to the target scale
+        // //zeno paradox: Achilles and the tortoise. Move halfway to your destination every time
+        // float smoothedScale = currentScale + (targetScale - currentScale) / smoothing;
+        //
+        // sphere2.transform.localScale = new Vector3(smoothedScale, smoothedScale, smoothedScale);
+        //
+        //
+        // //do something only when you reach a certain threshold (green sphere)
+        // if(freqBand[0] > threshold)
+        // {
+        //     sphere3.transform.localScale = new Vector3(10, 10, 10);
+        // }
+        // else
+        // {
+        //     sphere3.transform.localScale = new Vector3(1, 1, 1);
+        // }
 
 
     }
 
 
-    //splits the spectrum in 8 bands
+    //splits the spectrum in bands
     //from https://xr.berkeley.edu/decal/homework/hw2/
     void MakeFrequencyBands()
     {
         int count = 0;
 
-        // Iterate through the 8 bins.
-        for (int i = 0; i < 8; i++)
+        // Iterate through the bins.
+        for (int i = 0; i < bandCount; i++)
         {
             float average = 0;
-            int sampleCount = (int)Mathf.Pow(2, i + 1);
+            // int sampleCount = (int)Mathf.Pow(2, i + 1);
+            int sampleCount = spectrum.Length;
 
             // Adding the remaining two samples into the last bin.
-            if (i == 7)
-            {
-                sampleCount += 2;
-            }
+            // if (i == bandCount - 1)
+            // {
+            //     sampleCount += 2;
+            // }
 
             // Go through the number of samples for each bin, add the data to the average
             for (int j = 0; j < sampleCount; j++)
             {
-                average += spectrum[count];
+                Debug.Log(count);
+                Debug.Log(spectrum.Length);
+                
+                average += spectrum[count - 1];
                 count++;
             }
 
             // Divide to create the average, and scale it appropriately.
             average /= count;
             freqBand[i] = (i + 1) * 100 * average;
+            // Debug.Log(freqBand[0]);
         }
     }
 
@@ -123,6 +146,15 @@ public class AudioControls : MonoBehaviour
             NewValue = Mathf.Clamp(NewValue, NewMin, NewMax);
 
         return (NewValue);
+    }
+
+    private IEnumerator changeBandColor(int i, Color color) {
+        bass = true;
+        bandObjects[i].gameObject.GetComponent<Renderer>().material.color = color;
+        yield return new WaitForSeconds(0.2f);
+        bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.white;
+        bass = false;
+        yield return null;
     }
 
 }

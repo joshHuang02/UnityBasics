@@ -161,7 +161,7 @@ public class AudioControls : MonoBehaviour
 
     private IEnumerator triggerBass(int i) {
         bass = true;
-        // slotWheel2.GetComponent<SlotWheelController>().rotate();
+        slotWheel2.GetComponent<SlotWheelController>().rotate();
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.blue;
         yield return new WaitForSeconds(0.2f);
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.white;

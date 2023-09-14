@@ -2,26 +2,30 @@
 using UnityEngine;
 
 public class SlotWheelController : MonoBehaviour {
-    private float targety;
+    private float angleY;
+    private float angleX;
+    private float angleZ;
+    private Quaternion targetRotation;
 
     public float rotateSpeed = 1;
     // Start is called before the first frame update
     void Start() {
-        targety = gameObject.transform.localRotation.eulerAngles.y;
         Debug.Log(targety);
+        targetRotation = transform.rotation;
+        angleY = transform.rotation.eulerAngles.y;
+        angleX = transform.rotation.eulerAngles.x;
+        angleZ = transform.rotation.eulerAngles.z;
     }
 
     // Update is called once per frame
     void Update() {
-        if (targety > 360) targety -= 360;
-        Debug.Log(targety - gameObject.transform.localRotation.eulerAngles.y);
-        if (Mathf.Abs(targety - gameObject.transform.localRotation.eulerAngles.y) > 10) {
-            transform.Rotate(0, rotateSpeed * Time.deltaTime * (1), 0);
-            
-        }
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+
     }
 
     public void rotate() {
-        targety += 60;
+        angleX -= 60;
+        if (angleX > 360) angleX += 360;
+        targetRotation = Quaternion.Euler(angleX, angleY, angleZ);
     }
 }

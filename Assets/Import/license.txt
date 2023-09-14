@@ -1,0 +1,11 @@
+Model Information:
+* title:	Vintage Slot Machine
+* source:	https://sketchfab.com/3d-models/vintage-slot-machine-d8b3751f503d4b70ac7dc4a3e4b55bb2
+* author:	doomsentinel (https://sketchfab.com/doomsentinel)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Vintage Slot Machine" (https://sketchfab.com/3d-models/vintage-slot-machine-d8b3751f503d4b70ac7dc4a3e4b55bb2) by doomsentinel (https://sketchfab.com/doomsentinel) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

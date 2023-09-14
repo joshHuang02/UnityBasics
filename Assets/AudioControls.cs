@@ -26,6 +26,8 @@ public class AudioControls : MonoBehaviour
     public float threshold = 10;
 
     private bool bass;
+    private bool boop;
+    private bool snare;
     
     // Start is called before the first frame update
     void Start() {
@@ -41,7 +43,13 @@ public class AudioControls : MonoBehaviour
         AudioListener.GetSpectrumData(rawSpectrum, 0, FFTWindow.Blackman);
 
         spectrum = rawSpectrum;
-        // Debug.Log(spectrum[0]);
+        // spectrum = new float[rawSpectrum.Length];
+        // int spectrumIdx = 0;
+        // for (int i = 0; i < rawSpectrum.Length - rawSpectrum.Length / 2; i++) {
+        //     spectrum[spectrumIdx] = rawSpectrum[i];
+        //     spectrum[spectrumIdx + 1] = rawSpectrum[i];
+        //     spectrumIdx += 2;
+        // }
 
         //splits it in bands
         MakeFrequencyBands();
@@ -59,14 +67,14 @@ public class AudioControls : MonoBehaviour
                     bandObjects[i].transform.localScale = new Vector3(1, 1, height);
                     
                     if (i == 4 && height > bassLimit) {
-                        if (!bass) { StartCoroutine(changeBandColor(i, Color.blue));}
+                        if (!bass) { StartCoroutine(changeBandColor(i, Color.blue, bass));}
                     }
 
                     if (i == 6 && height > boopLimit) {
-                        StartCoroutine(changeBandColor(i, Color.red));
+                        if (!boop && !snare) { StartCoroutine(changeBandColor(i, Color.red, boop));}
                     }
                     if (i == 7 && height > snareLimit) {
-                        StartCoroutine(changeBandColor(i, Color.green));
+                        if (!snare && !boop) { StartCoroutine(changeBandColor(i, Color.green, snare));}
                     }
                 }
             }
@@ -149,12 +157,12 @@ public class AudioControls : MonoBehaviour
         return (NewValue);
     }
 
-    private IEnumerator changeBandColor(int i, Color color) {
-        bass = true;
+    private IEnumerator changeBandColor(int i, Color color, bool instrument) {
+        instrument = true;
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = color;
         yield return new WaitForSeconds(0.2f);
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.white;
-        bass = false;
+        instrument = false;
         yield return null;
     }
 

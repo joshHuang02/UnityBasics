@@ -151,7 +151,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 98bd45d48e3df4849ada967602df0733, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 819aae9ae46d6554392f5140bc62b9d8, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -252,6 +252,9 @@ MonoBehaviour:
   sphere1: {fileID: 498919215}
   sphere2: {fileID: 1736929010}
   sphere3: {fileID: 858305029}
+  bassLimit: 2.7
+  boopLimit: 0.95
+  snareLimit: 0
   bandObjects:
   - {fileID: 1509222851}
   - {fileID: 1265912604}

@@ -10,6 +10,10 @@ public class AudioControls : MonoBehaviour
     public GameObject sphere2;
     public GameObject sphere3;
 
+    public float bassLimit;
+    public float boopLimit;
+    public float snareLimit;
+
     private float[] spectrum;
     private float[] rawSpectrum;
     private static float[] freqBand;
@@ -36,7 +40,7 @@ public class AudioControls : MonoBehaviour
         //get the spectrum
         AudioListener.GetSpectrumData(rawSpectrum, 0, FFTWindow.Blackman);
 
-        spectrum = rawSpectrum[1000..6000];
+        spectrum = rawSpectrum;
         // Debug.Log(spectrum[0]);
 
         //splits it in bands
@@ -54,14 +58,16 @@ public class AudioControls : MonoBehaviour
                     float height = freqBand[i] * heightMultiplier;
                     bandObjects[i].transform.localScale = new Vector3(1, 1, height);
                     
-                    if (i == 3 && height > 4) {
+                    if (i == 4 && height > bassLimit) {
                         if (!bass) { StartCoroutine(changeBandColor(i, Color.blue));}
                     }
 
-                    if (i == 5 && height > 1.1) {
+                    if (i == 6 && height > boopLimit) {
                         StartCoroutine(changeBandColor(i, Color.red));
                     }
-
+                    if (i == 7 && height > snareLimit) {
+                        StartCoroutine(changeBandColor(i, Color.green));
+                    }
                 }
             }
         }
@@ -109,29 +115,24 @@ public class AudioControls : MonoBehaviour
         for (int i = 0; i < bandCount; i++)
         {
             float average = 0;
-            // int sampleCount = (int)Mathf.Pow(2, i + 1);
-            int sampleCount = spectrum.Length;
+            int sampleCount = (int)Mathf.Pow(2, i + 1);
 
             // Adding the remaining two samples into the last bin.
-            // if (i == bandCount - 1)
-            // {
-            //     sampleCount += 2;
-            // }
+            if (i == 7)
+            {
+                sampleCount += 2;
+            }
 
             // Go through the number of samples for each bin, add the data to the average
             for (int j = 0; j < sampleCount; j++)
             {
-                Debug.Log(count);
-                Debug.Log(spectrum.Length);
-                
-                average += spectrum[count - 1];
+                average += spectrum[count];
                 count++;
             }
 
             // Divide to create the average, and scale it appropriately.
             average /= count;
             freqBand[i] = (i + 1) * 100 * average;
-            // Debug.Log(freqBand[0]);
         }
     }
 

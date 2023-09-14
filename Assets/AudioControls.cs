@@ -9,6 +9,7 @@ public class AudioControls : MonoBehaviour
     public GameObject sphere1;
     public GameObject sphere2;
     public GameObject sphere3;
+    public GameObject slotWheel2;
 
     public float bassLimit;
     public float boopLimit;
@@ -37,8 +38,9 @@ public class AudioControls : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
+
+        getInputs();
         //get the spectrum
         AudioListener.GetSpectrumData(rawSpectrum, 0, FFTWindow.Blackman);
 
@@ -67,14 +69,14 @@ public class AudioControls : MonoBehaviour
                     bandObjects[i].transform.localScale = new Vector3(1, 1, height);
                     
                     if (i == 4 && height > bassLimit) {
-                        if (!bass) { StartCoroutine(changeBandColor(i, Color.blue, bass));}
+                        if (!bass) StartCoroutine(triggerBass(i));
                     }
 
                     if (i == 6 && height > boopLimit) {
-                        if (!boop && !snare) { StartCoroutine(changeBandColor(i, Color.red, boop));}
+                        if (!boop && !snare) StartCoroutine(triggerBoop(i));
                     }
                     if (i == 7 && height > snareLimit) {
-                        if (!snare && !boop) { StartCoroutine(changeBandColor(i, Color.green, snare));}
+                        if (!snare && !boop) StartCoroutine(triggerSnare(i));
                     }
                 }
             }
@@ -157,13 +159,37 @@ public class AudioControls : MonoBehaviour
         return (NewValue);
     }
 
-    private IEnumerator changeBandColor(int i, Color color, bool instrument) {
-        instrument = true;
-        bandObjects[i].gameObject.GetComponent<Renderer>().material.color = color;
+    private IEnumerator triggerBass(int i) {
+        bass = true;
+        // slotWheel2.GetComponent<SlotWheelController>().rotate();
+        bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.blue;
         yield return new WaitForSeconds(0.2f);
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.white;
-        instrument = false;
+        bass = false;
+        yield return null;
+    }
+    
+    private IEnumerator triggerBoop(int i) {
+        boop = true;
+        bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.white;
+        boop = false;
+        yield return null;
+    }
+    
+    private IEnumerator triggerSnare(int i) {
+        snare = true;
+        bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.green;
+        yield return new WaitForSeconds(0.2f);
+        bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.white;
+        snare = false;
         yield return null;
     }
 
+    private void getInputs() {
+        if (Input.GetKeyDown(KeyCode.F)) {
+            slotWheel2.GetComponent<SlotWheelController>().rotate();
+        }
+    }
 }

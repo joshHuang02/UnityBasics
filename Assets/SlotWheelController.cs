@@ -10,7 +10,7 @@ public class SlotWheelController : MonoBehaviour {
     public float rotateSpeed = 1;
     // Start is called before the first frame update
     void Start() {
-        Debug.Log(targety);
+        // Debug.Log(targety);
         targetRotation = transform.rotation;
         angleY = transform.rotation.eulerAngles.y;
         angleX = transform.rotation.eulerAngles.x;

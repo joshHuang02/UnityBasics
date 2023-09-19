@@ -10,8 +10,12 @@ public class AudioControls : MonoBehaviour
     public GameObject sphere2;
     public GameObject sphere3;
     public GameObject slotWheel2;
+    public GameObject roulette;
+    public GameObject cardSpawner;
+    public GameObject cardSpitter;
 
     public float bassLimit;
+    public float dootLimit;
     public float boopLimit;
     public float snareLimit;
 
@@ -27,6 +31,7 @@ public class AudioControls : MonoBehaviour
     public float threshold = 10;
 
     private bool bass;
+    private bool doot;
     private bool boop;
     private bool snare;
     
@@ -40,7 +45,7 @@ public class AudioControls : MonoBehaviour
     // Update is called once per frame
     void Update() {
 
-        getInputs();
+        GetInputs();
         //get the spectrum
         AudioListener.GetSpectrumData(rawSpectrum, 0, FFTWindow.Blackman);
 
@@ -69,15 +74,22 @@ public class AudioControls : MonoBehaviour
                     bandObjects[i].transform.localScale = new Vector3(1, 1, height);
                     
                     if (i == 4 && height > bassLimit) {
-                        if (!bass) StartCoroutine(triggerBass(i));
+                        if (!bass) StartCoroutine(TriggerBass(i));
+                    }
+                    
+                    if (i == 2 && height > dootLimit) {
+                        if (!doot && !bass) StartCoroutine(TriggerDoot(i));
+                    }
+                    
+                    if (i == 7 && height > snareLimit) {
+                        // if (!snare && !boop) StartCoroutine(triggerSnare(i));
+                        if (!snare) StartCoroutine(TriggerSnare(i));
                     }
 
                     if (i == 6 && height > boopLimit) {
-                        if (!boop && !snare) StartCoroutine(triggerBoop(i));
+                        if (!boop && !snare) StartCoroutine(TriggerBoop(i));
                     }
-                    if (i == 7 && height > snareLimit) {
-                        if (!snare && !boop) StartCoroutine(triggerSnare(i));
-                    }
+                    
                 }
             }
         }
@@ -159,7 +171,7 @@ public class AudioControls : MonoBehaviour
         return (NewValue);
     }
 
-    private IEnumerator triggerBass(int i) {
+    private IEnumerator TriggerBass(int i) {
         bass = true;
         slotWheel2.GetComponent<SlotWheelController>().rotate();
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.blue;
@@ -169,8 +181,21 @@ public class AudioControls : MonoBehaviour
         yield return null;
     }
     
-    private IEnumerator triggerBoop(int i) {
+    private IEnumerator TriggerDoot(int i) {
+        doot = true;
+        
+        cardSpitter.GetComponent<CardSpitter>().SpitCard();
+        bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.black;
+        yield return new WaitForSeconds(0.085f);
+        bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.white;
+        doot = false;
+        yield return null;
+    }
+    
+    private IEnumerator TriggerBoop(int i) {
         boop = true;
+        
+        roulette.GetComponent<RouletteController>().addTorque();
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.red;
         yield return new WaitForSeconds(0.2f);
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.white;
@@ -178,16 +203,20 @@ public class AudioControls : MonoBehaviour
         yield return null;
     }
     
-    private IEnumerator triggerSnare(int i) {
+    private IEnumerator TriggerSnare(int i) {
         snare = true;
+        for (int c = 1; c < Random.Range(2, 4); c++) {
+            StartCoroutine(cardSpawner.GetComponent<CardController>().FlipCard());
+        }
+
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.green;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.5f);
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.white;
         snare = false;
         yield return null;
     }
 
-    private void getInputs() {
+    private void GetInputs() {
         if (Input.GetKeyDown(KeyCode.F)) {
             slotWheel2.GetComponent<SlotWheelController>().rotate();
         }

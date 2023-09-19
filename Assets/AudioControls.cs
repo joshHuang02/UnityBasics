@@ -21,7 +21,9 @@ public class AudioControls : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        //use this to pipe the microphone in the audiosource instead of the music file
+        //it's a custom function at the bottom here
+        //InitMicrophone();
     }
 
     // Update is called once per frame
@@ -112,6 +114,29 @@ public class AudioControls : MonoBehaviour
         }
     }
 
+
+    void InitMicrophone()
+    {
+        AudioSource source = gameObject.GetComponent<AudioSource>();
+
+        if (Microphone.devices.Length > 0)
+        {
+            int minFreq, maxFreq, freq;
+            Microphone.GetDeviceCaps(null, out minFreq, out maxFreq);
+            freq = Mathf.Min(44100, maxFreq);
+
+            source = GetComponent<AudioSource>();
+            source.clip = Microphone.Start(null, true, 5, freq);
+            source.loop = true;
+
+            while (!(Microphone.GetPosition(null) > 0)) { }
+            source.Play();
+        }
+        else
+        {
+            Debug.Log("No Mic connected!");
+        }
+    }
 
     public static float Map(float OldValue, float OldMin, float OldMax, float NewMin, float NewMax, bool clamp = false)
     {

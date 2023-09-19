@@ -20,7 +20,6 @@ public class SlotWheelController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
-
     }
 
     public void rotate() {

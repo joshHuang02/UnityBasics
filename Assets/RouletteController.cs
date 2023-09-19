@@ -14,14 +14,6 @@ public class RouletteController : MonoBehaviour {
         normal = transform.up;
     }
 
-    // Update is called once per frame
-    void Update() 
-    {
-        // if (Input.GetKey(KeyCode.Space)) {
-        //     addTorque();
-        // }
-    }
-
     public void addTorque() {
         rb.AddTorque(normal * torque);
     }

@@ -214,6 +214,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3002856079554410828, guid: 6d5dd34754e8bad4799133e38aff4075, type: 3}
+      propertyPath: rotateSpeed
+      value: 220
+      objectReference: {fileID: 0}
+    - target: {fileID: 3691262791404953526, guid: 6d5dd34754e8bad4799133e38aff4075, type: 3}
+      propertyPath: rotateSpeed
+      value: 220
+      objectReference: {fileID: 0}
     - target: {fileID: 4793442935688125150, guid: 6d5dd34754e8bad4799133e38aff4075, type: 3}
       propertyPath: cardScale
       value: 90
@@ -474,10 +482,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987f96d60f398f7489a227ab8b243349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sphere1: {fileID: 498919215}
-  sphere2: {fileID: 1736929010}
-  sphere3: {fileID: 858305029}
+  slotWheel1: {fileID: 509036471}
   slotWheel2: {fileID: 1762759877}
+  slotWheel3: {fileID: 1408176805}
   roulette: {fileID: 9171422}
   cardSpawner: {fileID: 113912802}
   cardSpitter: {fileID: 1529286477}
@@ -499,8 +506,6 @@ MonoBehaviour:
   - {fileID: 594542787}
   - {fileID: 477601569}
   heightMultiplier: 0.4
-  smoothing: 130
-  threshold: 10
 --- !u!4 &194155207
 Transform:
   m_ObjectHideFlags: 0
@@ -757,6 +762,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &509036471 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4675657192366914126, guid: 6d5dd34754e8bad4799133e38aff4075, type: 3}
+  m_PrefabInstance: {fileID: 167080379}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &545008543 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: de3fe169ce341334aba87b4301219edc, type: 3}
@@ -1580,6 +1590,11 @@ Transform:
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: de3fe169ce341334aba87b4301219edc, type: 3}
   m_PrefabInstance: {fileID: 1265912602}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1408176805 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6518664914418982068, guid: 6d5dd34754e8bad4799133e38aff4075, type: 3}
+  m_PrefabInstance: {fileID: 167080379}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1509222849
 PrefabInstance:

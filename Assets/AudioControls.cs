@@ -1,15 +1,12 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(AudioSource))]
-public class AudioControls : MonoBehaviour
-{
-    public GameObject sphere1;
-    public GameObject sphere2;
-    public GameObject sphere3;
+public class AudioControls : MonoBehaviour {
+    private GameObject[] slotWheels;
+    public GameObject slotWheel1;
     public GameObject slotWheel2;
+    public GameObject slotWheel3;
     public GameObject roulette;
     public GameObject cardSpawner;
     public GameObject cardSpitter;
@@ -27,9 +24,6 @@ public class AudioControls : MonoBehaviour
     public GameObject[] bandObjects;
     public float heightMultiplier = 1;
 
-    public float smoothing = 100;
-    public float threshold = 10;
-
     private bool bass;
     private bool doot;
     private bool boop;
@@ -40,23 +34,17 @@ public class AudioControls : MonoBehaviour
         bandCount = bandObjects.Length;
         rawSpectrum =  new float[(int)Mathf.Pow(2, bandCount + 1)];
         freqBand = new float[bandCount];
+
+        slotWheels = new[] { slotWheel1, slotWheel2, slotWheel3 };
     }
 
     // Update is called once per frame
     void Update() {
-
-        GetInputs();
+        
         //get the spectrum
         AudioListener.GetSpectrumData(rawSpectrum, 0, FFTWindow.Blackman);
 
         spectrum = rawSpectrum;
-        // spectrum = new float[rawSpectrum.Length];
-        // int spectrumIdx = 0;
-        // for (int i = 0; i < rawSpectrum.Length - rawSpectrum.Length / 2; i++) {
-        //     spectrum[spectrumIdx] = rawSpectrum[i];
-        //     spectrum[spectrumIdx + 1] = rawSpectrum[i];
-        //     spectrumIdx += 2;
-        // }
 
         //splits it in bands
         MakeFrequencyBands();
@@ -93,37 +81,6 @@ public class AudioControls : MonoBehaviour
                 }
             }
         }
-
-        // //or use the band independently to control something else (red sphere)
-        // float s = freqBand[0]/2f;
-        //
-        // //same scale on 3 dimensions
-        // sphere1.transform.localScale = new Vector3(s, s, s);
-        //
-        //
-        //
-        // //to make it less noisy I can use an easing function (blue sphere)
-        // float currentScale = sphere2.transform.localScale.x; //it's the same across the 3 dimension so axis doesn't matter
-        // float targetScale = freqBand[0] / 2f;
-        //
-        // //add to the current scale a fraction of the distance to the target scale
-        // //zeno paradox: Achilles and the tortoise. Move halfway to your destination every time
-        // float smoothedScale = currentScale + (targetScale - currentScale) / smoothing;
-        //
-        // sphere2.transform.localScale = new Vector3(smoothedScale, smoothedScale, smoothedScale);
-        //
-        //
-        // //do something only when you reach a certain threshold (green sphere)
-        // if(freqBand[0] > threshold)
-        // {
-        //     sphere3.transform.localScale = new Vector3(10, 10, 10);
-        // }
-        // else
-        // {
-        //     sphere3.transform.localScale = new Vector3(1, 1, 1);
-        // }
-
-
     }
 
 
@@ -158,22 +115,12 @@ public class AudioControls : MonoBehaviour
         }
     }
 
-
-    public static float Map(float OldValue, float OldMin, float OldMax, float NewMin, float NewMax, bool clamp = false)
-    {
-        float OldRange = (OldMax - OldMin);
-        float NewRange = (NewMax - NewMin);
-        float NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin;
-
-        if (clamp)
-            NewValue = Mathf.Clamp(NewValue, NewMin, NewMax);
-
-        return (NewValue);
-    }
-
     private IEnumerator TriggerBass(int i) {
         bass = true;
-        slotWheel2.GetComponent<SlotWheelController>().rotate();
+        
+        GameObject targetSlotWheel = slotWheels[Random.Range(0, slotWheels.Length)];
+        targetSlotWheel.GetComponent<SlotWheelController>().rotate();
+        
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.blue;
         yield return new WaitForSeconds(0.2f);
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.white;
@@ -214,11 +161,5 @@ public class AudioControls : MonoBehaviour
         bandObjects[i].gameObject.GetComponent<Renderer>().material.color = Color.white;
         snare = false;
         yield return null;
-    }
-
-    private void GetInputs() {
-        if (Input.GetKeyDown(KeyCode.F)) {
-            slotWheel2.GetComponent<SlotWheelController>().rotate();
-        }
     }
 }

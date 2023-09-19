@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CardSpitter : MonoBehaviour
@@ -7,17 +5,6 @@ public class CardSpitter : MonoBehaviour
     public float cardScale;
     public float spitStrength;
     public float rotateSpeed;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void SpitCard() {
         Object[] objects = Resources.LoadAll("Cards", typeof(GameObject));
@@ -37,6 +24,5 @@ public class CardSpitter : MonoBehaviour
             spinDir = new Vector3(Random.Range(0.05f, 0.05f), -1, 0);
         }
         rb.AddTorque(spinDir * rotateSpeed);
-
     }
 }

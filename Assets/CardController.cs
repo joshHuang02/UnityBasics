@@ -1,4 +1,3 @@
-
 using System.Collections;
 using UnityEngine;
 
@@ -11,7 +10,6 @@ public class CardController : MonoBehaviour {
     public float flipDuration;
     
     private GameObject[,] cards;
-    private Vector3 startingPoint = new Vector3(0, 0, 0);
 
     // Start is called before the first frame update
     void Start() {
@@ -44,11 +42,8 @@ public class CardController : MonoBehaviour {
         while ( t  < flipDuration )
         {
             t += Time.deltaTime;
-
             float rotation = Mathf.Lerp(startRotation, endRotation, t / flipDuration) % 360.0f;
-
             card.transform.eulerAngles = new Vector3(rotation, card.transform.eulerAngles.y, card.transform.eulerAngles.z);
-
             yield return null;
         }
     }
